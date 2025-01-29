@@ -1,17 +1,37 @@
 # tp_spark
 
-charger un fichier txt en rdd
+1. charger un fichier txt en rdd
+rdd = sc.textFile('/workspaces/...')
 
-type de la variable
+2. type de la variable
+type(rdd) #pour l'objet rdd
 
-première ligne 
+rdd_type = rdd.map(lambda x: type(x))
+rdd_type.take(n) #Pour les types des éléements dans le rdd
 
-combien il y a de ligne dans un fichier
+df.printSchema() #affiche le schéma complet du data frame dont le type des colonnes
+df.shema["nomColonne"].dataType #affiche le type spécifique pour une colonne du data frame
 
-le nombre de ligne contenant un certain mot
+3. première ligne 
+rdd.first()
 
-la longueur d'un mot
+4. combien il y a de ligne dans un fichier
+rdd.count()
 
-l'occurence pour un mot
+5. le nombre de ligne contenant un certain mot
+rdd_ligne = rdd.filter(lambda ligne: "mot" in ligne.lower())
+rdd_ligne.count()
 
-comment faire un cache et comment le déclencher
+7. la longueur d'un mot
+len('mot')
+
+8. l'occurence pour un mot
+rdd_map = rdd.flatMap(lambda line: line.split(" "))
+rdd_map.take(n)  #Pour déclencher la transformation on applique une action
+rdd_couple = rdd_map.map(lambda mot: (mot,1))
+rdd_count = rdd_couple.reduceByKey(lambda x,y: x+y)
+rdd_count.take(n) #Résultat du map reduce des n premiers résultats
+
+9. comment faire un cache et comment le déclencher
+rdd.persist()
+rdd.count()
